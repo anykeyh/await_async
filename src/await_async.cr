@@ -24,7 +24,7 @@ class MiniFuture(T)
   end
 
   def finished?
-    @status == :terminated
+    !@running?
   end
 
   def running?
@@ -32,8 +32,8 @@ class MiniFuture(T)
   end
 
   def await
-    @output = @channel.receive
-    @status = :terminated
+    @output = @channel.receive unless @status == :flushed
+    @status = :flushed
 
     if e = @error
       raise e
