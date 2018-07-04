@@ -55,5 +55,11 @@ module AwaitAsyncSpec
       async { 1 + 1 }.finished?.should eq true
       async_lp { 1 + 1 }.finished?.should eq false
     end
+
+    it "can call multiple time await" do
+      f = async { 1 + 1 }
+      await f
+      await f
+    end
   end
 end
