@@ -2,7 +2,6 @@
 
 Add `await` and `async` keyword in Crystal.
 
-
 ## Usage
 
 - Call `async` on any method or block to create a MiniFuture
@@ -11,6 +10,18 @@ Add `await` and `async` keyword in Crystal.
 
 Can improve drastically application which relay on blocking IO like web API
 or file writing.
+
+### await(timeout, future)
+
+```crystal
+f = async check_website
+
+begin
+  await 5.seconds, f
+rescue MiniFuture::TimeoutException
+  # rescue from timeout
+end
+```
 
 ### async_lp
 

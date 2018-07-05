@@ -1,5 +1,8 @@
 # Lightweight Future structure.
 class MiniFuture(T)
+  class TimeoutException < Exception
+  end
+
   @status = :running
   @channel = Channel(T).new(1)
   @error : Exception? = nil
@@ -31,10 +34,26 @@ class MiniFuture(T)
     @status == :running
   end
 
-  def await
+  def await(timeout : Time::Span? = nil)
     if @status != :flushed
-      @status = :flushed
-      @output = @channel.receive
+      if timeout
+        timeout_channel = Channel(Nil).new
+
+        spawn do
+          sleep timeout.not_nil!
+          timeout_channel.send nil unless @status == :flushed
+        end
+
+        select
+        when timeout_channel.receive
+          raise TimeoutException.new
+        when @output = @channel.receive
+          @status = :flushed
+        end
+      else
+        @status = :flushed
+        @output = @channel.receive
+      end
     end
 
     if e = @error
@@ -53,8 +72,16 @@ def await(future : MiniFuture)
   future.await
 end
 
-def await(futures : Iterator(MiniFuture(T))) forall T
-  futures.map { |x| await x }
+def await(timeout : Time::Span, future : MiniFuture)
+  future.await(timeout)
+end
+
+def await(futures : Iterator(MiniFuture(T)) | Array(MiniFuture(T))) forall T
+  futures.map(&.await)
+end
+
+def await(timeout : Time::Span, futures : Iterator(MiniFuture(T)) | Array(MiniFuture(T))) forall T
+  futures.map(&.await(timeout))
 end
 
 macro async(method)

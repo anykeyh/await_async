@@ -61,5 +61,27 @@ module AwaitAsyncSpec
       await f
       await f
     end
+
+    it "can await with timeout" do
+      x = async { sleep 0.5 }
+
+      expect_raises MiniFuture::TimeoutException do
+        await 0.2.seconds, x
+      end
+
+      x = async { sleep 0.1 }
+      await 0.2.seconds, x # < Should not raise exception
+    end
+  end
+
+  it "can await with timeout (array)" do
+    x = 5.times.map { |arr| async { sleep 0.5 } }.to_a
+
+    expect_raises MiniFuture::TimeoutException do
+      await 0.2.seconds, x
+    end
+
+    x = 5.times.map { async { sleep 0.1 } }.to_a
+    await 0.2.seconds, x # < Should not raise exception
   end
 end
