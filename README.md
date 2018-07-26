@@ -2,11 +2,34 @@
 
 Add `await` and `async` keyword in Crystal.
 
+## Installation
+
+In your `shards.yml`:
+
+```crystal
+dependencies:
+  await_async:
+    github: anykeyh/await_async
+    branch: master
+```
+
+Then:
+
+```crystal
+require "await_async"
+
+x = async fetch_something
+
+do_some_computation_now
+
+await x
+```
+
 ## Usage
 
 - Call `async` on any method or block to create a MiniFuture
 - Call `await` on any MiniFuture to wait for/get the result
-- Conveniently, you can call await on iterators (eg. Array) .
+- Conveniently, you can call `await` on future's array.
 
 Can improve drastically application which relay on blocking IO like web API
 or file writing.
@@ -46,13 +69,23 @@ await f #Compute now
 Usually, use `async_lp` if your block is computation intensive and current thread
 has IO blocking operation. Use `async` in other cases.
 
-In case of errors, the exception will be raise at `await` moment.
+In case of errors, the exception will be raise at `await` moment, in the await
+thread.
 
 ## MiniFuture
 
 A minimalist version of future. Has `finished?` and `running?` methods.
 
 I don't use Crystal's `Concurrent::Future` class because `:nodoc:`
+
+## Why?
+
+Because crystal is great for building CLI tools. And CLI deals a lot with
+files and sockets. And IO performed in main thread are slow.
+
+Usage of Channel is recommended for complex software, as it offers more patterns.
+
+`await/async` is useful to build fast and deliver fast.
 
 ## Example
 
@@ -72,11 +105,11 @@ end
 
 # Process the websites concurrently. Start querying another website when the
 # first one is waiting for response
-await(fetch_websites_async).each do |response|
+await(5.seconds, fetch_websites_async).each do |response|
  #...
 end
 ```
 
 ## Licence
 
-MIT.
+MIT
