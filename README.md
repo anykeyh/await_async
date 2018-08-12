@@ -89,7 +89,7 @@ Usage of Channel is recommended for complex software, as it offers more patterns
 
 ## I don't want await/async to be exported in the global scope
 
-1. require `await_async/helper` instead of `await_async_helper`
+1. require `await_async/helper` instead of `await_async`
 2. In the class/module you want to use the methods, add `include AwaitAsync::Helper`.
    You can also simply call `await/async` directly from `AwaitAsync::Helper`
 
