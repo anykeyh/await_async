@@ -7,19 +7,16 @@ module AwaitAsyncSpec
   @@string_output = ""
 
   def a_long_method
-    @@string_output += "A"
+    string_output = "A"
     sleep(0.1)
-    @@string_output += "B"
+    string_output += "B"
   end
 
   describe "Await/Async" do
     it "works with method" do
-      @@string_output = ""
-
       x = async a_long_method
-      await x
 
-      @@string_output.should eq "AB"
+      (await x).should eq "AB"
     end
 
     it "works with block" do
