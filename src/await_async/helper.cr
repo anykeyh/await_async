@@ -15,12 +15,12 @@ module AwaitAsync::Helper
   end
 
   # Iterate through all the future and await for them.
-  def await(futures : Iterator(MiniFuture(T)) | Array(MiniFuture(T))) forall T
+  def await(futures : Enumerable(MiniFuture(T))) forall T
     futures.map(&.await)
   end
 
   # Iterate through all the future and await for them.
-  def await(timeout : Time::Span, futures : Iterator(MiniFuture(T)) | Array(MiniFuture(T))) forall T
+  def await(timeout : Time::Span, futures : Enumerable(MiniFuture(T))) forall T
     futures.map(&.await(timeout))
   end
 
