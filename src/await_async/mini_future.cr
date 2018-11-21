@@ -8,7 +8,7 @@ class MiniFuture(T)
   @error : Exception?
   @output : T?
 
-  def initialize(prioritary = true, &block : -> T)
+  def initialize(immediate = true, &block : -> T)
     spawn do
       begin
         @channel.send block.call
@@ -19,7 +19,7 @@ class MiniFuture(T)
       end
     end
 
-    Fiber.yield if prioritary
+    Fiber.yield if immediate
   end
 
   def running?

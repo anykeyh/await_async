@@ -33,7 +33,7 @@ module AwaitAsync::Helper
   #
   # NOTE: The fiber won't be started after creation.
   macro async_lp(method)
-    MiniFuture(typeof({{method}})).new(prioritary: false) { {{method}} }
+    MiniFuture(typeof({{method}})).new(immediate: false) { {{method}} }
   end
 
   macro async(&block)
@@ -43,6 +43,6 @@ module AwaitAsync::Helper
 
   macro async_lp(&block)
     %lmb = -> { {{block.body}} }
-    MiniFuture(typeof(%lmb.call)).new(prioritary: false) { %lmb.call }
+    MiniFuture(typeof(%lmb.call)).new(immediate: false) { %lmb.call }
   end
 end
