@@ -7,4 +7,9 @@ authors:
 description: |
   Provide await and async keyword in crystal language
 
+development_dependencies:
+  ameba:
+    github: veelenga/ameba
+    version: 0.8.1
+
 license: MIT
