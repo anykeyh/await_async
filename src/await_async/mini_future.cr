@@ -31,7 +31,7 @@ class MiniFuture(T)
   end
 
   def error?
-    @error.any?
+    @error
   end
 
   def await(timeout : Time::Span? = nil)
