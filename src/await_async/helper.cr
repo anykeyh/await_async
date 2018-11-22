@@ -25,23 +25,23 @@ module AwaitAsync::Helper
   end
 
   # Ask Crystal to run this method asynchronously in its own fiber.
-  macro async(method)
+  macro async!(method)
     MiniFuture(typeof({{method}})).new { {{method}} }
   end
 
   # Ask Crystal to run this method asynchronously in its own fiber.
   #
   # NOTE: The fiber won't be started after creation.
-  macro async_lp(method)
+  macro async(method)
     MiniFuture(typeof({{method}})).new(immediate: false) { {{method}} }
   end
 
-  macro async(&block)
+  macro async!(&block)
     %lmb = -> { {{block.body}} }
     MiniFuture(typeof(%lmb.call)).new { %lmb.call }
   end
 
-  macro async_lp(&block)
+  macro async(&block)
     %lmb = -> { {{block.body}} }
     MiniFuture(typeof(%lmb.call)).new(immediate: false) { %lmb.call }
   end

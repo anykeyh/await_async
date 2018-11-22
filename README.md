@@ -46,28 +46,28 @@ rescue MiniFuture::TimeoutException
 end
 ```
 
-### `async` / `async_lp`
+### `async!` / `async`
 
-By default, `async` call the newly created fiber just after creation.
+By default, `async!` call the newly created fiber just after creation.
 
-- You can use instead `async_lp` so the fiber won't start now:
+- You can use instead `async` so the fiber won't start now:
 
 ```crystal
-future = async { 1 + 2 }
+future = async! { 1 + 2 }
 # At this moment the result is already computed
 # future.finished? == true
 await future # => 3
 
 # vs
 
-future = async_lp { 1 + 2 }
+future = async { 1 + 2 }
 # Here the result is not computed
 # future.finished? == false
 await future # Compute now
 ```
 
-Usually, use `async_lp` if your block is computation intensive and current thread
-has IO blocking operation. Use `async` in other cases.
+Usually, use `async` if your block is computation intensive and current thread
+has IO blocking operation. Use `async!` in other cases.
 
 In case of errors, the exception will be raise at `await` moment, in the await
 thread.
@@ -104,7 +104,7 @@ def fetch_websites_async
     www.twitter.com
     crystal-lang.org
   ].map do |url|
-    async do
+    async! do
       HTTP::Client.get "https://#{url}"
     end
   end

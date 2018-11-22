@@ -13,7 +13,7 @@ end
 
 def multiple_small_write_async
   2048.times.map do |i|
-    async File.write("generated/#{i}", i.to_s)
+    async! File.write("generated/#{i}", i.to_s)
   end
 end
 

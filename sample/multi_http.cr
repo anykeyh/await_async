@@ -18,7 +18,7 @@ end
 
 def fetch_websites_async
   WEBSITES.map do |url|
-    async do
+    async! do
       HTTP::Client.get "https://#{url}"
     end
   end
