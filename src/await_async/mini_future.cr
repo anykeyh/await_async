@@ -5,33 +5,33 @@ class MiniFuture(T)
 
   @status = :running
   @channel = Channel(T).new(1)
-  @error : Exception? = nil
+  @error : Exception?
   @output : T?
 
-  def initialize(prioritary = true, &block : -> T)
+  def initialize(immediate = true, &block : -> T)
     spawn do
       begin
         @channel.send block.call
-      rescue e
-        @error = e
+      rescue ex
+        @error = ex
       ensure
         @status = :terminated
       end
     end
 
-    Fiber.yield if prioritary
+    Fiber.yield if immediate
   end
 
-  def error?
-    @error.any?
+  def running?
+    @status == :running
   end
 
   def finished?
     !running?
   end
 
-  def running?
-    @status == :running
+  def error?
+    @error
   end
 
   def await(timeout : Time::Span? = nil)
@@ -56,8 +56,8 @@ class MiniFuture(T)
       end
     end
 
-    if e = @error
-      raise e
+    if ex = @error
+      raise ex
     end
 
     {% if T.nilable? %}
