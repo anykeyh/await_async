@@ -1,5 +1,7 @@
 ## Await / Async
 
+[![Build Status](https://travis-ci.org/anykeyh/await_async.svg?branch=master)](https://travis-ci.org/anykeyh/await_async)
+
 Add `await` and `async` keywords to Crystal.
 
 ## Installation
