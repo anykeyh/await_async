@@ -9,7 +9,7 @@ description: |
 
 development_dependencies:
   ameba:
-    github: veelenga/ameba
-    version: 0.8.1
+    github: crystal-ameba/ameba
+    version: ~> 0.10.1
 
 license: MIT
