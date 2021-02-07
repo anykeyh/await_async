@@ -1,6 +1,8 @@
 name: await_async
 version: 0.1.0
 
+crystal: 0.36.1
+
 authors:
   - Yacine Petitprez <anykeyh@gmail.com>
 
@@ -10,6 +12,6 @@ description: |
 development_dependencies:
   ameba:
     github: crystal-ameba/ameba
-    version: ~> 0.10.1
+    version: ~> 0.13.4
 
 license: MIT
