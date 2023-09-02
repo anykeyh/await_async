@@ -34,6 +34,37 @@ class MiniFuture(T)
     @error
   end
 
+  def then(&on_fulfilled : (T) -> U) : MiniFuture(U) forall U
+    MiniFuture(U).new do
+      value = self.await
+      on_fulfilled.call(value)
+    end
+  end
+
+  def catch(&on_rejected : (Exception) -> T) : MiniFuture(T)
+    MiniFuture(T).new do
+      begin
+        value = self.await
+      rescue ex
+        value = on_rejected.call(ex)
+      end
+
+      value
+    end
+  end
+
+  def finally(&on_finally : -> T) : MiniFuture(T)
+    MiniFuture(T).new do
+      begin
+        value = self.await
+      ensure
+        on_finally.call
+      end
+
+      value
+    end
+  end
+
   def await(timeout : Time::Span? = nil)
     if @status != :flushed
       if timeout
